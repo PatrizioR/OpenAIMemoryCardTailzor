@@ -2,8 +2,6 @@
 
 OpenAIMemoryCardTailzor is a fun and interactive memory game built with ASP.NET Core Blazor WebAssembly and styled using Tailwind CSS. Test your memory skills against a friend, and see who can find the most matching pairs of cards.
 
-![OpenAIMemoryCardTailzor Screenshot](screenshot.png)
-
 ## Features
 
 - Two-player memory game
@@ -18,7 +16,7 @@ OpenAIMemoryCardTailzor is a fun and interactive memory game built with ASP.NET 
 
 Ensure that you have the following software installed on your local machine:
 
-- .NET SDK 6.0 or later
+- .NET SDK 7.0 or later
 
 ### Installation
 
