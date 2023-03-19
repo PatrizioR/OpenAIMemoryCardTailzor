@@ -1,0 +1,50 @@
+﻿<!-- MemoryCard.razor -->
+@code {
+    [Parameter]
+    [EditorRequired]
+    public MemoryCard Card { get; set; } = null!;
+    [Parameter] public EventCallback OnCardClick { get; set; }
+    [Parameter] public bool IsFlipped { get; set; }
+    private bool _isOverlayVisible;
+    private void FlipCard()
+    {
+        OnCardClick.InvokeAsync();
+    }
+    private void ToggleOverlay()
+    {
+        _isOverlayVisible = !_isOverlayVisible;
+    }
+}
+<div class="relative h-32 w-32 bg-white shadow-md transition-transform transform hover:scale-105" @onclick="() => FlipCard()">
+    @if (!IsFlipped)
+    {
+        <div class="p-1">
+            <!-- Front side of the card -->
+        </div>
+    }
+    else
+    {
+        <div class="p-2 h-full w-full">
+            @if (!string.IsNullOrEmpty(Card.Content))
+            {
+                @((MarkupString)Card.Content)
+            }
+            @if (!string.IsNullOrEmpty(Card.VideoUrl))
+            {
+                <button class="absolute top-1 right-1 bg-blue-500 text-white px-2 py-1 rounded-md" @onclick="ToggleOverlay">&gt;</button>
+            }
+            @if (!string.IsNullOrEmpty(Card.Name))
+            {
+                <div title="@Card.Description" class="absolute text-xs bottom-3 left-4 bg-gray-100 text-black px-2 py-1 rounded-md">@Card.Name</div>
+            }
+        </div>
+    }
+</div>
+@if (_isOverlayVisible)
+{
+    <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <label class="text-xl2">@Card.Name - @Card.Description</label>
+        <video src="@Card.VideoUrl" controls autoplay class="w-3/4"></video>
+        <button class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-md" @onclick="ToggleOverlay">Close</button>
+    </div>
+}

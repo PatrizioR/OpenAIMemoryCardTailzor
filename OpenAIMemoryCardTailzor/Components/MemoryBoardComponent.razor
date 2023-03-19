@@ -1,0 +1,42 @@
+﻿<h1 class="text-4xl mb-4">Memory Game - <span class="font-bold">@_currentPlayer?.Name </span></h1>
+@if (!_isNameEntered)
+{
+    <div class="mb-4">
+        <label for="player1Name" class="block mb-1">Player 1 Name:</label>
+        <input id="player1Name" type="text" @bind="_player1.Name" class="border border-gray-300 p-2 rounded-md w-full" />
+        <label for="player2Name" class="block mt-4 mb-1">Player 2 Name:</label>
+        <input id="player2Name" type="text" @bind="_player2.Name" class="border border-gray-300 p-2 rounded-md w-full" />
+
+        <label for="numCards" class="block mt-4 mb-1">Number of Cards:</label>
+        <select id="numCards" @bind="_cardCount" class="border border-gray-300 p-2 rounded-md w-full">
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+            <option value="20">20</option>
+            <option value="24">24</option>
+            <option value="32">32</option>
+        </select>
+
+        <button @onclick="() => SetPlayerNames(_player1.Name, _player2.Name)" class="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Start Game</button>
+    </div>
+}
+@if (_isNameEntered && !_isGameOver && PlayCards != null)
+{
+    <div class="grid grid-cols-4 gap-4 m-4">
+        @foreach (var card in PlayCards)
+        {
+            <MemoryCardComponent Card="@card" IsFlipped="card.IsFlipped" OnCardClick="() => OnCardClick(card)" />
+        }
+    </div>
+    <div class="flex space-x-4">
+        <div class="text-xl @(_currentPlayer == _player1 ? "font-bold" : "")">@_player1.Name: @_player1.Score</div>
+        <div class="text-xl @(_currentPlayer == _player2 ? "font-bold" : "")">@_player2.Name: @_player2.Score</div>
+    </div>
+}
+@if (_isGameOver)
+{
+    <div class="mt-4">
+        <h2 class="text-2xl">Game Over. @_currentPlayer.Name wins!</h2>
+        <button @onclick="RestartGame" class="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">Restart Game</button>
+    </div>
+}
