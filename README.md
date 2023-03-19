@@ -22,7 +22,7 @@ Ensure that you have the following software installed on your local machine:
 
 1. Clone the repo
    ```
-   git clone https://github.com/yourusername/OpenAIMemoryCardTailzor.git
+   git clone https://github.com/PatrizioR/OpenAIMemoryCardTailzor.git
    ```
 2. Navigate to the `OpenAIMemoryCardTailzor` directory
    ```
