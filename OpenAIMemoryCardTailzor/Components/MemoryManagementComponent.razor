@@ -1,0 +1,9 @@
+﻿<div>
+    <input type="text" @bind="@FilterText" @bind:event="oninput" />
+</div>
+<div class="grid grid-cols-4 gap-4 m-4">
+    @foreach (var card in FilteredCards)
+    {
+        <MemoryCardComponent Card="@card" IsFlipped="true" />
+    }
+</div>

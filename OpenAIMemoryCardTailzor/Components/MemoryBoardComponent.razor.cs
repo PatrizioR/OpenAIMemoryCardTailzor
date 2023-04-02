@@ -49,7 +49,7 @@ namespace OpenAIMemoryCardTailzor.Components
         {
             Random random = new();
             int cardPairs = _cardCount / 2;
-            var cardsToPlay = Cards.Take(cardPairs).Select((item)=> item.Clone()).ToList();
+            var cardsToPlay = Cards.OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
 
             PlayCards = cardsToPlay.Concat(cardsToPlay.Select(item => item.Clone())).OrderBy(x => random.Next()).ToList();
         }

@@ -2,7 +2,8 @@
 {
     public class MemoryCard
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+        public string? Category { get; set; }
         public string? Name { get; set; }
         public string? Content { get; set; }
         public string? Description { get; set; }
@@ -15,6 +16,7 @@
             {
                 Id = this.Id,
                 Name = this.Name,
+                Category = this.Category,
                 Content = this.Content,
                 Description = this.Description,
                 VideoUrl = this.VideoUrl,
