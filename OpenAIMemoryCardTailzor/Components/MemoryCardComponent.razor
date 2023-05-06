@@ -5,6 +5,7 @@
     public MemoryCard Card { get; set; } = null!;
     [Parameter] public EventCallback OnCardClick { get; set; }
     [Parameter] public bool IsFlipped { get; set; }
+    [Parameter] public bool HideName{ get; set; }
     private bool _isOverlayVisible;
     private void FlipCard()
     {
@@ -37,7 +38,7 @@
             {
                 <button class="absolute top-1 right-1 bg-blue-500 text-white px-2 py-1 rounded-md" @onmouseover="ShowOverlay">&gt;</button>
             }
-            @if (!string.IsNullOrEmpty(Card.Name))
+            @if (!string.IsNullOrEmpty(Card.Name) && !HideName)
             {
                 <div title="@Card.Description" class="absolute text-xs bottom-3 left-4 bg-gray-100 text-black px-2 py-1 rounded-md">@Card.Name</div>
             }
@@ -48,9 +49,7 @@
 {
     <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <label class="text-xl2">@Card.Name - @Card.Description</label>
-        <iframe src="@(Card.VideoUrl)?feature=share" rameborder="0" class="w-3/4 h-3/4"></iframe>
-
-        @*<video src="@Card.VideoUrl" controls autoplay class="w-3/4"></video>*@
+        <iframe src="@(Card.VideoUrl)?feature=share" frameborder="0" class="w-5/6 h-5/6"></iframe>
         <button class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-md" @onclick="ToggleOverlay">Close</button>
     </div>
 }
