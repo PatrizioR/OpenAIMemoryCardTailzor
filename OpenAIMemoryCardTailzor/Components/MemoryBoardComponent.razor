@@ -6,7 +6,14 @@
         <input id="player1Name" type="text" @bind="_player1.Name" class="border border-gray-300 p-2 rounded-md w-full" />
         <label for="player2Name" class="block mt-4 mb-1">Player 2 Name:</label>
         <input id="player2Name" type="text" @bind="_player2.Name" class="border border-gray-300 p-2 rounded-md w-full" />
-
+        <label for="category" class="block mt-4 mb-1">Category:</label>
+        <select id="category" @bind="_cardCategory" class="border border-gray-300 p-2 rounded-md w-full">
+            <option value="" selected="selected">Filter category...</option>
+            @foreach (var category in Cards.Select(card => card.Category).Distinct().Order())
+            {
+                <option value="@category">@category</option>
+            }
+        </select>
         <label for="numCards" class="block mt-4 mb-1">Number of Cards:</label>
         <select id="numCards" @bind="_cardCount" class="border border-gray-300 p-2 rounded-md w-full">
             <option value="8">8</option>

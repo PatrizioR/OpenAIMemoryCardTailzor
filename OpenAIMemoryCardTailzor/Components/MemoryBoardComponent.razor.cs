@@ -9,6 +9,7 @@ namespace OpenAIMemoryCardTailzor.Components
         public List<MemoryCard> Cards { get; set; } = null!;
         public List<MemoryCard>? PlayCards { get; set; }
         private int _cardCount = 16;
+        private string? _cardCategory = null;
         private bool isProcessing = false;
         private Player? _player1;
         private Player? _player2;
@@ -49,7 +50,7 @@ namespace OpenAIMemoryCardTailzor.Components
         {
             Random random = new();
             int cardPairs = _cardCount / 2;
-            var cardsToPlay = Cards.OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
+            var cardsToPlay = Cards.Where((item)=> string.IsNullOrEmpty(_cardCategory) || item.Category == _cardCategory).OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
 
             PlayCards = cardsToPlay.Concat(cardsToPlay.Select(item => item.Clone())).OrderBy(x => random.Next()).ToList();
         }
