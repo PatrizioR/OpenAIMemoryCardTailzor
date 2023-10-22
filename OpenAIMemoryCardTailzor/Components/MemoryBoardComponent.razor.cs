@@ -110,10 +110,12 @@ namespace OpenAIMemoryCardTailzor.Components
             
             if (_selectedCard.Id == card.Id)
             {
-                _currentPlayer.Score++;
+                _currentPlayer!.Score++;
                 await Task.Delay(2000);
-                PlayCards?.Remove(_selectedCard);
-                PlayCards?.Remove(card);
+                _selectedCard.IsCollected = true;
+                _selectedCard.IsFlipped = false;
+                card.IsCollected = true;
+                card.IsFlipped = false;
                 if (PlayCards?.Count <= 2)
                 {
                     _isGameOver = true;

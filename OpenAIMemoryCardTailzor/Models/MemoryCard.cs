@@ -9,6 +9,7 @@
         public string? Description { get; set; }
         public string? VideoUrl { get; set; }
         public bool IsFlipped { get; set; }
+        public bool IsCollected { get; set; }
 
         public MemoryCard Clone()
         {

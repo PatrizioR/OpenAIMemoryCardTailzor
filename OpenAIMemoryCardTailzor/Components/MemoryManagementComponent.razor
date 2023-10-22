@@ -1,5 +1,5 @@
 ﻿<div class="m-2">
-    <input type="search" @bind="@FilterText" @bind:event="oninput" name="search" id="search" class="w-full px-4 py-3 text-gray-800 bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Search...">
+    <input type="search" @bind="@FilterText" @bind:event="oninput" name="search" autofocus id="search" class="w-full px-4 py-3 text-gray-800 bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Search...">
 </div>
 <div class="grid grid-cols-4 gap-4 m-4">
     @foreach (var card in FilteredCards)

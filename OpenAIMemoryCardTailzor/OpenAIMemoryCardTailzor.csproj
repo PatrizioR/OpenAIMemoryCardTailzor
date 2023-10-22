@@ -20,4 +20,9 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\images\memory_card\animals\" />
+	  <Folder Include="wwwroot\images\assets\" />
+	</ItemGroup>
+
 </Project>

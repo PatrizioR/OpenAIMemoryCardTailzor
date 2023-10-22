@@ -3,7 +3,8 @@ module.exports = {
 		"./**/*.html",
 		"./**/*.razor",
 		"./**/*.cshtml",
-		"./**/app.css",
+		"./**/appsettings.json",
+		"./**/styles.css",
 	],
 	theme: {
 		extend: {
