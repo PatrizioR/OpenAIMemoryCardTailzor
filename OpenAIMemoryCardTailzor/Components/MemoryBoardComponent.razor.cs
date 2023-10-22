@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OpenAIMemoryCardTailzor.Models;
-
+using System.Runtime.CompilerServices;
+using System.Linq;
 namespace OpenAIMemoryCardTailzor.Components
 {
     public partial class MemoryBoardComponent
     {
+        [Inject] HttpClient Client { get; set; } = null!;
         [Inject]
         public List<MemoryCard> Cards { get; set; } = null!;
         public List<MemoryCard>? PlayCards { get; set; }
@@ -18,15 +20,23 @@ namespace OpenAIMemoryCardTailzor.Components
         private MemoryCard? _selectedSecondCard;
         private bool _isGameOver;
         private bool _isNameEntered;
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
             InitializeGame();
+            await base.OnInitializedAsync();
         }
-        private void InitializeGame()
+        private void InitializeGame(bool keepNames = false)
         {
+            string? player1Name = _player1?.Name;
+            string? player2Name = _player2?.Name;
+
             _player1 = new Player();
             _player2 = new Player();
+            if (keepNames)
+            {
+                _player1.Name = player1Name ?? "";
+                _player2.Name = player2Name ?? "";
+            }
             _currentPlayer = _player1;
             _isGameOver = false;
             _isNameEntered = false;
@@ -35,24 +45,56 @@ namespace OpenAIMemoryCardTailzor.Components
         }
         private void RestartGame()
         {
-            InitializeGame();
+            InitializeGame(true);
         }
 
-        private void SetPlayerNames(string player1Name, string player2Name)
+        private async Task SetPlayerNamesAsync(string player1Name, string player2Name)
         {
+            await InitializeCardsAsync();
             _player1.Name = player1Name;
             _player2.Name = player2Name;
             _isNameEntered = true;
-            InitializeCards();
         }
 
-        private void InitializeCards()
+        private async Task InitializeCardsAsync()
         {
             Random random = new();
             int cardPairs = _cardCount / 2;
-            var cardsToPlay = Cards.Where((item)=> string.IsNullOrEmpty(_cardCategory) || item.Category == _cardCategory).OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
+            var cardsWithCategories = Cards.Where((item) => string.IsNullOrEmpty(_cardCategory) || item.Category == _cardCategory);
+            var validCardIds = new List<Guid>();
+            var cardsToPlay = cardsWithCategories.OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
+            var cardsIdToContent = cardsToPlay.Select((item) => new KeyValuePair<Guid, string?>(item.Id, item.Content)).ToList();
 
-            PlayCards = cardsToPlay.Concat(cardsToPlay.Select(item => item.Clone())).OrderBy(x => random.Next()).ToList();
+            foreach (var cardIdToContent  in cardsIdToContent)
+            {
+                if(cardIdToContent.Value == null)
+                {
+                    continue;
+                }
+                if (cardIdToContent.Value.StartsWith("<")){
+                    validCardIds.Add(cardIdToContent.Key);
+                }else if(!cardIdToContent.Value.Contains("/") && !cardIdToContent.Value.Contains("."))
+                {
+                    validCardIds.Add(cardIdToContent.Key);
+                }
+                else
+                {
+                    try
+                    {
+                        var result = await Client.GetByteArrayAsync($"images/memory_card/{cardIdToContent.Value}");
+                        if(result?.Length  > 0)
+                        {
+                            validCardIds.Add(cardIdToContent.Key);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+            var validCardsToPlay = cardsToPlay.Where((item) => validCardIds.Contains(item.Id)).ToList();
+            PlayCards = validCardsToPlay.Concat(validCardsToPlay.Select(item => item.Clone())).OrderBy(x => random.Next()).ToList();
         }
         private async Task OnCardClick(MemoryCard card)
         {
@@ -116,7 +158,7 @@ namespace OpenAIMemoryCardTailzor.Components
                 _selectedCard.IsFlipped = false;
                 card.IsCollected = true;
                 card.IsFlipped = false;
-                if (PlayCards?.Count <= 2)
+                if (PlayCards?.Where(pc => !pc.IsCollected)?.Count() <= 2)
                 {
                     _isGameOver = true;
                 }
