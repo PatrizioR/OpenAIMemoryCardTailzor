@@ -161,6 +161,9 @@ namespace OpenAIMemoryCardTailzor.Components
                 if (PlayCards?.Where(pc => !pc.IsCollected)?.Count() <= 2)
                 {
                     _isGameOver = true;
+
+                    // select the player with the most points
+                    _currentPlayer = _player1!.Score > _player2!.Score ? _player1 : _player2;
                 }
             }
             if (!_isGameOver)
