@@ -62,7 +62,7 @@ namespace OpenAIMemoryCardTailzor.Components
             int cardPairs = _cardCount / 2;
             var cardsWithCategories = Cards.Where((item) => string.IsNullOrEmpty(_cardCategory) || item.Category == _cardCategory);
             var validCardIds = new List<Guid>();
-            var cardsToPlay = cardsWithCategories.OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
+            var cardsToPlay = cardsWithCategories.Where(card => !card.Disabled).OrderBy(x => random.Next()).Take(cardPairs).Select((item)=> item.Clone()).ToList();
             var cardsIdToContent = cardsToPlay.Select((item) => new KeyValuePair<Guid, string?>(item.Id, item.Content)).ToList();
 
             foreach (var cardIdToContent  in cardsIdToContent)

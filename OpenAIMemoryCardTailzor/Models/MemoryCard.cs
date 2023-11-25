@@ -10,6 +10,7 @@
         public string? VideoUrl { get; set; }
         public bool IsFlipped { get; set; }
         public bool IsCollected { get; set; }
+        public bool Disabled { get; set; }
 
         public MemoryCard Clone()
         {
@@ -21,7 +22,8 @@
                 Content = this.Content,
                 Description = this.Description,
                 VideoUrl = this.VideoUrl,
-                IsFlipped = this.IsFlipped
+                IsFlipped = this.IsFlipped,
+                Disabled = this.Disabled
             };
         }
     }
